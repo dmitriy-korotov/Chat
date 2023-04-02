@@ -5,16 +5,21 @@
 #include <conio.h>
 
 
-
+// client data
 static const Web::EAddressFamily _ADDRESS_FAMILY_ = Web::EAddressFamily::AF_Inet;
 static const std::string _IP_ADDRESS_ = "127.0.0.1";
-static const uint16_t _PORT_ = 2000u;
+static const uint16_t _PORT_ = 2001u;
+
+// server data
+static const Web::EAddressFamily _SERVER_ADDRESS_FAMILY_ = Web::EAddressFamily::AF_Inet;
+static const std::string _SERVER_IP_ADDRESS_ = "127.0.0.1";
+static const uint16_t _SERVER_PORT_ = 2000u;
 
 
-// server
+// client
 int main(int argc, char** argv)
 {
-	std::cout << " => Runing server...\n\n";
+	std::cout << " => Client application running...\n\n";
 
 
 	// initializing sockets
@@ -27,7 +32,7 @@ int main(int argc, char** argv)
 	{
 		consoleLogSuccess("Sockets successfully initialiezed.");
 	}
-	
+
 
 	// creating socket
 	Web::Socket socket(Web::EAddressFamily::AF_Inet, Web::ESocketType::SocketStream);
@@ -44,42 +49,17 @@ int main(int argc, char** argv)
 	}
 
 
-	// binding socket
-	if (!socket.bindSocket(_ADDRESS_FAMILY_, _IP_ADDRESS_, _PORT_))
+	// connecting to other socket
+	if (!socket.connectToOtherSocket(_SERVER_IP_ADDRESS_, _SERVER_PORT_))
 	{
-		consoleLogError("Can't binding socket:");
-		consoleLogSocketAddress(_IP_ADDRESS_, _PORT_);
+		consoleLogError("Can't connect to other socket:");
+		consoleLogSocketAddress(_SERVER_IP_ADDRESS_, _SERVER_PORT_);
 		return 1;
 	}
 	else
 	{
-		consoleLogSuccess("Socket successfully binded:");
-		consoleLogSocketAddress(_IP_ADDRESS_, _PORT_);
-	}
-
-
-	// start listening other sockets
-	if (!socket.listenOtherSockets())
-	{
-		consoleLogError("Can't listen other sockets.");
-		return 1;
-	}
-	else
-	{
-		consoleLogSuccess("Successfuly listening other sockets...");
-	}
-
-
-	// accepting other socket
-	Web::Socket client_socket;
-	try
-	{
-		client_socket = socket.acceptOtherSocket();
-	}
-	catch (...)
-	{
-		consoleLogError("Can't accept other socket.");
-		return 1;
+		consoleLogSuccess("Successfully connect to other socket:");
+		consoleLogSocketAddress(_SERVER_IP_ADDRESS_, _SERVER_PORT_);
 	}
 
 
@@ -87,17 +67,9 @@ int main(int argc, char** argv)
 	std::string message;
 
 
-	// server loop
+	// client loop
 	while (true)
 	{
-		// reciving message
-		std::string message = client_socket.reciveData();
-		ConsoleColor::setConsoleColor(ConsoleColor::EColor::Blue);
-		std::cout << " => Client message:   ";
-		ConsoleColor::setConsoleColor(ConsoleColor::EColor::White);
-		std::cout << message << "\n\n";
-
-
 		// inputing message
 		ConsoleColor::setConsoleColor(ConsoleColor::EColor::Purpule);
 		std::cout << " => Input your message:   ";
@@ -111,16 +83,24 @@ int main(int argc, char** argv)
 
 
 		// sending message
-		if (!client_socket.sendData(message))
+		if (!socket.sendData(message))
 		{
 			consoleLogError("Can't send message.");
 		}
+
+
+		// reciving message
+		std::string message = socket.reciveData();
+		ConsoleColor::setConsoleColor(ConsoleColor::EColor::Blue);
+		std::cout << " => Server message:   ";
+		ConsoleColor::setConsoleColor(ConsoleColor::EColor::White);
+		std::cout << message << "\n\n";
 	}
 
 	// closing all sockets
 	Web::Socket::closeAllSockets();
 
-	std::cout << " => Server finishes work...\n\n";				char get = _getch();
+	std::cout << " => Client finishes work...\n\n";				char get = _getch();
 
 	return 0;
 }

@@ -5,9 +5,18 @@ set(PROJECT_NAME Server)
 project(${PROJECT_NAME})
 
 add_executable(${PROJECT_NAME}
+
 		src/main.cpp
+
 		../libs/Socket.h
 		../libs/Socket.cpp
 		../libs/SocketFunctions.h
 		../libs/SocketFunctions.cpp
+		
+		../libs/ConsoleColor.h
+		../libs/ConsoleColor.cpp
+		../libs/ConsoleLogFunctions.h
+		../libs/ConsoleLogFunctions.cpp
 )
+
+include_directories(../libs)

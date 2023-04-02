@@ -56,6 +56,7 @@ namespace Web
 
 
 
+		Socket() = default;
 		Socket(EAddressFamily _address_family, ESocketType _socket_type, EProtocolType _protocol_type = EProtocolType::Default);
 		Socket(Socket&& _other_socket) noexcept;
 		Socket& operator=(Socket&& _other_socket) noexcept;
@@ -70,6 +71,7 @@ namespace Web
 
 		bool isValid() const noexcept;
 		bool bindSocket(EAddressFamily _address_family, const std::string& _ip_address, Port _port);
+		bool connectToOtherSocket(const std::string& _ip_address, Port _port) const noexcept;
 		bool listenOtherSockets(unsigned int _max_listened_sockets = SOMAXCONN) const noexcept;
 		Socket acceptOtherSocket() const;
 		std::string reciveData(size_t _buffer_size = 1024) const noexcept;
@@ -93,7 +95,7 @@ namespace Web
 		static WSADATA m_ws_data;
 
 		SOCKET m_socket = 0;
-		EAddressFamily m_address_family;
+		EAddressFamily m_address_family = EAddressFamily::AF_Inet;
 		Port m_port = 0;
 	};
 }

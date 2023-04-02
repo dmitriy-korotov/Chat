@@ -31,6 +31,7 @@ namespace Web
 	{
 		_other_socket.m_socket = 0;
 		_other_socket.m_port = 0;
+		_other_socket.m_address_family = EAddressFamily::AF_Inet;
 	}
 
 
@@ -105,6 +106,28 @@ namespace Web
 
 
 
+	bool Socket::connectToOtherSocket(const std::string& _ip_address, Port _port) const noexcept
+	{
+		in_addr numeric_ip_address;
+		std::memset(&numeric_ip_address, 0, sizeof(numeric_ip_address));
+		sockaddr_in socket_info;
+		std::memset(&socket_info, 0, sizeof(socket_info));
+
+		try
+		{
+			numeric_ip_address = transformToNumericFormat(_ip_address);
+			socket_info = createSocketAddress(numeric_ip_address, _port);
+		}
+		catch (...)
+		{
+			return false;
+		}
+
+		return !connect(m_socket, reinterpret_cast<sockaddr*>(&socket_info), sizeof(socket_info));
+	}
+
+
+
 	in_addr Socket::transformToNumericFormat(const std::string& _ip_address) const
 	{
 		in_addr address;
@@ -116,7 +139,7 @@ namespace Web
 		}
 		else
 		{
-			throw std::exception("=> ERROR : Error in IP translation to special numeric format.");
+			throw std::exception("Error in IP translation to special numeric format.");
 		}
 	}
 
@@ -132,7 +155,7 @@ namespace Web
 
 	bool Socket::listenOtherSockets(unsigned int _max_listened_sockets) const noexcept
 	{
-		return listen(m_socket, static_cast<int>(_max_listened_sockets));
+		return !listen(m_socket, static_cast<int>(_max_listened_sockets));
 	}
 
 
@@ -148,7 +171,7 @@ namespace Web
 		if (socket == INVALID_SOCKET)
 		{
 			closesocket(socket);
-			throw std::exception("=> ERROR : Error connecting to socket.");
+			throw std::exception("Error connecting to socket.");
 		}
 		else
 		{
@@ -180,7 +203,7 @@ namespace Web
 
 		if (getpeername(_socket, reinterpret_cast<sockaddr*>(&socket_info), &size_socket_info))
 		{
-			throw std::exception("=> Can't get socket port.");
+			throw std::exception("Can't get socket port.");
 		}
 		else
 		{
@@ -215,16 +238,19 @@ namespace Web
 
 	void Socket::close() noexcept
 	{
-		closesocket(m_socket);
-		m_port = 0;
-		m_socket = 0;
+		if (m_socket != 0)
+		{
+			closesocket(m_socket);
+			m_port = 0;
+			m_socket = 0;
+		}
 	}
 
 
 
 	bool Socket::initSockets() noexcept
 	{
-		return WSAStartup(MAKEWORD(SOCKET_VERSION_1, SOCKET_VERSION_2), &m_ws_data);
+		return !WSAStartup(MAKEWORD(SOCKET_VERSION_1, SOCKET_VERSION_2), &m_ws_data);
 	}
 
 
