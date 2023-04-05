@@ -3,7 +3,7 @@
 #include "ConsoleLogFunctions.h"
 
 #include <conio.h>
-
+#include <thread>
 
 
 static const Web::EAddressFamily _ADDRESS_FAMILY_ = Web::EAddressFamily::AF_Inet;
@@ -21,6 +21,7 @@ int main(int argc, char** argv)
 	if (!Web::Socket::initSockets())
 	{
 		consoleLogError("Can't initialiezed sockets.");
+		char get = _getch();
 		return 1;
 	}
 	else
@@ -35,6 +36,7 @@ int main(int argc, char** argv)
 	{
 		consoleLogError("Can't creating socket:");
 		consoleLogSocketAddress(_IP_ADDRESS_, _PORT_);
+		char get = _getch();
 		return 1;
 	}
 	else
@@ -49,6 +51,7 @@ int main(int argc, char** argv)
 	{
 		consoleLogError("Can't binding socket:");
 		consoleLogSocketAddress(_IP_ADDRESS_, _PORT_);
+		char get = _getch();
 		return 1;
 	}
 	else
@@ -62,6 +65,7 @@ int main(int argc, char** argv)
 	if (!socket.listenOtherSockets())
 	{
 		consoleLogError("Can't listen other sockets.");
+		char get = _getch();
 		return 1;
 	}
 	else
@@ -70,52 +74,115 @@ int main(int argc, char** argv)
 	}
 
 
-	// accepting other socket
-	Web::Socket client_socket;
-	try
-	{
-		client_socket = socket.acceptOtherSocket();
-	}
-	catch (...)
-	{
-		consoleLogError("Can't accept other socket.");
-		return 1;
-	}
-
-
 	// buffer messages
 	std::string message;
 
+	Web::Socket client_socket1;
+	Web::Socket client_socket2;
 
-	// server loop
-	while (true)
-	{
-		// reciving message
-		std::string message = client_socket.reciveData();
-		ConsoleColor::setConsoleColor(ConsoleColor::EColor::Blue);
-		std::cout << " => Client message:   ";
-		ConsoleColor::setConsoleColor(ConsoleColor::EColor::White);
-		std::cout << message << "\n\n";
-
-
-		// inputing message
-		ConsoleColor::setConsoleColor(ConsoleColor::EColor::Purpule);
-		std::cout << " => Input your message:   ";
-		ConsoleColor::setConsoleColor(ConsoleColor::EColor::White);
-		std::cin >> message;			std::cout << "\n";
-
-		if (message == "end" || message == "END")
+	std::thread thread1([&]()
 		{
-			break;
-		}
+			// accepting other socket
+			try
+			{
+				client_socket1 = socket.acceptOtherSocket();
+			}
+			catch (...)
+			{
+				consoleLogError("Can't accept other socket.");
+				char get = _getch();
+			}
 
 
-		// sending message
-		if (!client_socket.sendData(message))
+			// server loop
+			while (true)
+			{
+				// reciving message
+				std::string message = client_socket1.reciveData();
+				if (message != "")
+				{
+					ConsoleColor::setConsoleColor(ConsoleColor::EColor::Blue);
+					std::cout << " => Client message:   ";
+					ConsoleColor::setConsoleColor(ConsoleColor::EColor::White);
+					std::cout << message << "\n\n";
+				}
+				else
+				{
+					break;
+				}
+
+
+				// sending message
+				if (!client_socket2.sendData(message))
+				{
+					consoleLogError("Can't send message.");
+				}
+			}
+		});
+
+	std::thread thread2([&]()
 		{
-			consoleLogError("Can't send message.");
-		}
-	}
+			// accepting other socket
+			try
+			{
+				client_socket2 = socket.acceptOtherSocket();
+			}
+			catch (...)
+			{
+				consoleLogError("Can't accept other socket.");
+				char get = _getch();
+			}
+
+			// server loop
+			while (true)
+			{
+				// reciving message
+				std::string message = client_socket2.reciveData();
+				if (message != "")
+				{
+					ConsoleColor::setConsoleColor(ConsoleColor::EColor::Blue);
+					std::cout << " => Client message:   ";
+					ConsoleColor::setConsoleColor(ConsoleColor::EColor::White);
+					std::cout << message << "\n\n";
+				}
+				else
+				{
+					break;
+				}
+
+
+				// sending message
+				if (!client_socket1.sendData(message))
+				{
+					consoleLogError("Can't send message.");
+				}
+			}
+
+			// server loop
+			/*while (true)
+			{
+				// inputing message
+				ConsoleColor::setConsoleColor(ConsoleColor::EColor::Purpule);
+				std::cout << " => Input your message:   ";
+				ConsoleColor::setConsoleColor(ConsoleColor::EColor::White);
+				std::cin >> message;			std::cout << "\n";
+
+				if (message == "end" || message == "END")
+				{
+					break;
+				}
+
+
+				// sending message
+				if (!client_socket.sendData(message))
+				{
+					consoleLogError("Can't send message.");
+				}
+			}*/
+		});
+
+	thread2.detach();
+	thread1.join();
 
 	// closing all sockets
 	Web::Socket::closeAllSockets();
