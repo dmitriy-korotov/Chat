@@ -94,7 +94,7 @@ namespace Web
 		
 		static WSADATA m_ws_data;
 
-		SOCKET m_socket = 0;
+		SOCKET m_socket = INVALID_SOCKET;
 		EAddressFamily m_address_family = EAddressFamily::AF_Inet;
 		Port m_port = 0;
 	};

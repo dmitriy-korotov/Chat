@@ -112,10 +112,13 @@ int main(int argc, char** argv)
 				}
 
 
-				// sending message
-				if (!client_socket2.sendData(message))
+				if (client_socket2.isValid())
 				{
-					consoleLogError("Can't send message.");
+					// sending message
+					if (!client_socket2.sendData(message))
+					{
+						consoleLogError("Can't send message.");
+					}
 				}
 			}
 		});
@@ -151,37 +154,18 @@ int main(int argc, char** argv)
 				}
 
 
-				// sending message
-				if (!client_socket1.sendData(message))
+				if (client_socket1.isValid())
 				{
-					consoleLogError("Can't send message.");
+					// sending message
+					if (!client_socket1.sendData(message))
+					{
+						consoleLogError("Can't send message.");
+					}
 				}
 			}
-
-			// server loop
-			/*while (true)
-			{
-				// inputing message
-				ConsoleColor::setConsoleColor(ConsoleColor::EColor::Purpule);
-				std::cout << " => Input your message:   ";
-				ConsoleColor::setConsoleColor(ConsoleColor::EColor::White);
-				std::cin >> message;			std::cout << "\n";
-
-				if (message == "end" || message == "END")
-				{
-					break;
-				}
-
-
-				// sending message
-				if (!client_socket.sendData(message))
-				{
-					consoleLogError("Can't send message.");
-				}
-			}*/
 		});
 
-	thread2.detach();
+	thread2.join();
 	thread1.join();
 
 	// closing all sockets

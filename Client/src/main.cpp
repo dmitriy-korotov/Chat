@@ -1,6 +1,8 @@
 #include "Socket.h"
 #include "ConsoleColor.h"
 #include "ConsoleLogFunctions.h"
+#include "Interface/InputArea.h"
+#include "ConsoleOutputFunctions.h"
 
 #include <conio.h>
 #include <thread>
@@ -13,19 +15,16 @@ static const std::string _SERVER_IP_ADDRESS_ = "127.0.0.1";
 static const uint16_t _SERVER_PORT_ = 2000u;
 
 
+// console settings
+static constexpr uint16_t _CONSOLE_WDITH_ = 120;
+static constexpr uint16_t _CONSOLE_HEIGHT_ = 30;
+
+
 // client
 int main(int argc, char** argv)
 {
-	srand(time(0));
 
-
-	// client data
-	static const Web::EAddressFamily _ADDRESS_FAMILY_ = Web::EAddressFamily::AF_Inet;
-	static const std::string _IP_ADDRESS_ = "127.0.0.1";
-	static const uint16_t _PORT_ = 2001 + std::rand() % 2000;
-
-
-	std::cout << " => Client application running...\n\n";
+	//std::cout << " => Client application running...\n\n";
 
 	// initializing sockets
 	if (!Web::Socket::initSockets())
@@ -34,47 +33,36 @@ int main(int argc, char** argv)
 		char get = _getch();
 		return 1;
 	}
-	else
-	{
-		consoleLogSuccess("Sockets successfully initialiezed.");
-	}
 
 
 	// creating socket
 	Web::Socket socket(Web::EAddressFamily::AF_Inet, Web::ESocketType::SocketStream);
 	if (!socket.isValid())
 	{
-		consoleLogError("Can't creating socket:");
-		consoleLogSocketAddress(_IP_ADDRESS_, _PORT_);
+		consoleLogError("Can't creating clinet socket");
 		char get = _getch();
 		return 1;
 	}
-	else
-	{
-		consoleLogSuccess("Socket successfully creating:");
-		consoleLogSocketAddress(_IP_ADDRESS_, _PORT_);
-	}
 
 
-	// connecting to other socket
+	// connecting to server
 	if (!socket.connectToOtherSocket(_SERVER_IP_ADDRESS_, _SERVER_PORT_))
 	{
-		consoleLogError("Can't connect to other socket:");
+		consoleLogError("Can't connect to server:");
 		consoleLogSocketAddress(_SERVER_IP_ADDRESS_, _SERVER_PORT_);
 		char get = _getch();
 		return 1;
 	}
-	else
-	{
-		consoleLogSuccess("Successfully connect to other socket:");
-		consoleLogSocketAddress(_SERVER_IP_ADDRESS_, _SERVER_PORT_);
-	}
+
 
 
 	// buffer messages
 	std::string message;
 
+	// Input area object
+	Chat::InputArea input_area(_CONSOLE_WDITH_, _CONSOLE_HEIGHT_, 3);
 
+	Chat::ConsoleCoords messages_coords;
 
 	std::thread thread1([&]()
 		{
@@ -82,16 +70,21 @@ int main(int argc, char** argv)
 			while (true)
 			{
 				// inputing message
-				ConsoleColor::setConsoleColor(ConsoleColor::EColor::Purpule);
-				std::cout << " => Input your message:   ";
-				ConsoleColor::setConsoleColor(ConsoleColor::EColor::White);
-				std::cin >> message;			std::cout << "\n";
+				message = input_area.inputMessage();
 
 				if (message == "end" || message == "END")
 				{
 					socket.close();
 					break;
 				}
+
+				
+				Chat::moveConsoleCursor(messages_coords);
+				messages_coords += Chat::ConsoleCoords(0, 2);
+				ConsoleColor::setConsoleColor(ConsoleColor::EColor::Purpule);
+				std::cout << " => Your message:   ";
+				ConsoleColor::setConsoleColor(ConsoleColor::EColor::White);
+				std::cout << message << std::endl << std::endl;
 
 
 				// sending message
@@ -111,10 +104,12 @@ int main(int argc, char** argv)
 				std::string message = socket.reciveData();
 				if (message != "")
 				{
+					Chat::moveConsoleCursor(messages_coords);
+					messages_coords += Chat::ConsoleCoords(0, 2);
 					ConsoleColor::setConsoleColor(ConsoleColor::EColor::Blue);
-					std::cout << " => Server message:   ";
+					std::cout << " => Other message:   ";
 					ConsoleColor::setConsoleColor(ConsoleColor::EColor::White);
-					std::cout << message << "\n\n";
+					std::cout << message << std::endl << std::endl;
 				}
 				else
 				{
@@ -125,7 +120,7 @@ int main(int argc, char** argv)
 		});
 
 	thread2.join();
-	thread1.detach();
+	thread1.join();
 
 	// closing all sockets
 	Web::Socket::closeAllSockets();

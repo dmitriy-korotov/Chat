@@ -7,7 +7,10 @@ project(${PROJECT_NAME})
 add_executable(${PROJECT_NAME}
 
 		src/main.cpp
-	
+		
+		src/Interface/InputArea.h
+		src/Interface/InputArea.cpp
+
 		../libs/Socket.h
 		../libs/Socket.cpp
 		../libs/SocketFunctions.h
@@ -17,6 +20,10 @@ add_executable(${PROJECT_NAME}
 		../libs/ConsoleColor.cpp
 		../libs/ConsoleLogFunctions.h
 		../libs/ConsoleLogFunctions.cpp
+		../libs/ConsoleOutputFunctions.h
+		../libs/ConsoleOutputFunctions.cpp
+		../libs/ConsoleCoords.h
+		../libs/ConsoleCoords.cpp
 )
 
 include_directories(../libs)
