@@ -20,7 +20,7 @@ namespace Chat
 
 	std::string InputArea::inputMessage() const noexcept
 	{
-		std::string message;
+		char buffer[120] = {};
 
 		moveConsoleCursor(m_console_coords);
 		ConsoleColor::setConsoleColor(m_color);
@@ -29,8 +29,18 @@ namespace Chat
 		printHorizontalLine('-', m_console_width);
 		moveConsoleCursor(m_console_coords + ConsoleCoords(0, 2));
 
-		std::cin >> message;
+		std::fgets(buffer, m_console_width, stdin);
+		
+		moveConsoleCursor(m_console_coords + ConsoleCoords(0, 2));
+		std::cout << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t";
 
-		return message;
+		return buffer;
+	}
+
+
+
+	void InputArea::setCursorOnInput() const noexcept
+	{
+		moveConsoleCursor(m_console_coords + ConsoleCoords(0, 2));
 	}
 }

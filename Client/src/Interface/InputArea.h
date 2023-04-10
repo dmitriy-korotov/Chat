@@ -20,10 +20,11 @@ namespace Chat
 				  uint16_t _input_area_position_x = 0, uint16_t _input_area_position_y = 0);
 
 		std::string inputMessage() const noexcept;
+		void setCursorOnInput() const noexcept;
 
 	private:
 
-		mutable ConsoleCoords m_console_coords = ConsoleCoords();
+		ConsoleCoords m_console_coords = ConsoleCoords();
 
 		uint16_t m_console_width = 0;
 		uint16_t m_console_height = 0;

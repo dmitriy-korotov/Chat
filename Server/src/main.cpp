@@ -86,6 +86,8 @@ int main(int argc, char** argv)
 			try
 			{
 				client_socket1 = socket.acceptOtherSocket();
+				consoleLogSuccess("Successfully connected client1:");
+				consoleLogSocketAddress(_IP_ADDRESS_, client_socket1.getPort());
 			}
 			catch (...)
 			{
@@ -99,18 +101,10 @@ int main(int argc, char** argv)
 			{
 				// reciving message
 				std::string message = client_socket1.reciveData();
-				if (message != "")
-				{
-					ConsoleColor::setConsoleColor(ConsoleColor::EColor::Blue);
-					std::cout << " => Client message:   ";
-					ConsoleColor::setConsoleColor(ConsoleColor::EColor::White);
-					std::cout << message << "\n\n";
-				}
-				else
+				if (message == "")
 				{
 					break;
 				}
-
 
 				if (client_socket2.isValid())
 				{
@@ -129,6 +123,8 @@ int main(int argc, char** argv)
 			try
 			{
 				client_socket2 = socket.acceptOtherSocket();
+				consoleLogSuccess("Successfully connected client2:");
+				consoleLogSocketAddress(_IP_ADDRESS_, client_socket2.getPort());
 			}
 			catch (...)
 			{
@@ -141,14 +137,7 @@ int main(int argc, char** argv)
 			{
 				// reciving message
 				std::string message = client_socket2.reciveData();
-				if (message != "")
-				{
-					ConsoleColor::setConsoleColor(ConsoleColor::EColor::Blue);
-					std::cout << " => Client message:   ";
-					ConsoleColor::setConsoleColor(ConsoleColor::EColor::White);
-					std::cout << message << "\n\n";
-				}
-				else
+				if (message == "")
 				{
 					break;
 				}

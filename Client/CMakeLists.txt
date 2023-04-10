@@ -8,6 +8,8 @@ add_executable(${PROJECT_NAME}
 
 		src/main.cpp
 		
+		src/Interface/Message.h
+		src/Interface/Message.cpp
 		src/Interface/InputArea.h
 		src/Interface/InputArea.cpp
 

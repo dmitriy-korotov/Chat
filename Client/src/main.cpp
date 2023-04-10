@@ -1,8 +1,9 @@
 #include "Socket.h"
 #include "ConsoleColor.h"
 #include "ConsoleLogFunctions.h"
-#include "Interface/InputArea.h"
 #include "ConsoleOutputFunctions.h"
+#include "Interface/Message.h"
+#include "Interface/InputArea.h"
 
 #include <conio.h>
 #include <thread>
@@ -23,9 +24,6 @@ static constexpr uint16_t _CONSOLE_HEIGHT_ = 30;
 // client
 int main(int argc, char** argv)
 {
-
-	//std::cout << " => Client application running...\n\n";
-
 	// initializing sockets
 	if (!Web::Socket::initSockets())
 	{
@@ -62,7 +60,7 @@ int main(int argc, char** argv)
 	// Input area object
 	Chat::InputArea input_area(_CONSOLE_WDITH_, _CONSOLE_HEIGHT_, 3);
 
-	Chat::ConsoleCoords messages_coords;
+
 
 	std::thread thread1([&]()
 		{
@@ -72,25 +70,23 @@ int main(int argc, char** argv)
 				// inputing message
 				message = input_area.inputMessage();
 
-				if (message == "end" || message == "END")
+				if (message == "end\n" || message == "END\n")
 				{
 					socket.close();
 					break;
 				}
 
 				
-				Chat::moveConsoleCursor(messages_coords);
-				messages_coords += Chat::ConsoleCoords(0, 2);
-				ConsoleColor::setConsoleColor(ConsoleColor::EColor::Purpule);
-				std::cout << " => Your message:   ";
-				ConsoleColor::setConsoleColor(ConsoleColor::EColor::White);
-				std::cout << message << std::endl << std::endl;
-
-
-				// sending message
-				if (!socket.sendData(message))
+				if (message != "")
 				{
-					consoleLogError("Can't send message.");
+					Chat::Message::printMessage("You", message, ConsoleColor::EColor::Purpule);
+
+
+					// sending message
+					if (!socket.sendData(message))
+					{
+						consoleLogError("Can't send message.");
+					}
 				}
 			}
 		});
@@ -104,12 +100,9 @@ int main(int argc, char** argv)
 				std::string message = socket.reciveData();
 				if (message != "")
 				{
-					Chat::moveConsoleCursor(messages_coords);
-					messages_coords += Chat::ConsoleCoords(0, 2);
-					ConsoleColor::setConsoleColor(ConsoleColor::EColor::Blue);
-					std::cout << " => Other message:   ";
-					ConsoleColor::setConsoleColor(ConsoleColor::EColor::White);
-					std::cout << message << std::endl << std::endl;
+					Chat::Message::printMessage("Other user", message);
+
+					input_area.setCursorOnInput();
 				}
 				else
 				{
@@ -125,7 +118,8 @@ int main(int argc, char** argv)
 	// closing all sockets
 	Web::Socket::closeAllSockets();
 
-	std::cout << " => Client finishes work...\n\n";				char get = _getch();
+	//std::cout << " => Client finishes work...\n\n";				
+	char get = _getch();
 
 	return 0;
 }
