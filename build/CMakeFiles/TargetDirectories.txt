@@ -1,7 +1,0 @@
-C:/Users/User/MyProjects/Chat/build/CMakeFiles/Chat.dir
-C:/Users/User/MyProjects/Chat/build/CMakeFiles/ALL_BUILD.dir
-C:/Users/User/MyProjects/Chat/build/CMakeFiles/ZERO_CHECK.dir
-C:/Users/User/MyProjects/Chat/build/Server/CMakeFiles/Server.dir
-C:/Users/User/MyProjects/Chat/build/Server/CMakeFiles/ALL_BUILD.dir
-C:/Users/User/MyProjects/Chat/build/Client/CMakeFiles/Client.dir
-C:/Users/User/MyProjects/Chat/build/Client/CMakeFiles/ALL_BUILD.dir
