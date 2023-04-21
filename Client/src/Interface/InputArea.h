@@ -2,37 +2,47 @@
 #ifndef INPUT_AREA_H
 #define INPUT_AREA_H
 
+#include "Console.h"
+#include "ConsoleCoords.h"
+
+#include "InterfaceSync.h"
+
 #include <iostream>
 #include <Windows.h>
-
-#include "ConsoleColor.h"
-#include "ConsoleCoords.h"
 
 
 
 namespace Chat
 {
-	class InputArea
+	class InputArea : protected InterfaceSync
 	{
 	public:
 
-		InputArea(uint16_t _console_width, uint16_t _console_height, uint16_t _area_height,
-				  uint16_t _input_area_position_x = 0, uint16_t _input_area_position_y = 0);
+		explicit InputArea(uint16_t _area_height, uint16_t _input_area_position_x = 0, uint16_t _input_area_position_y = 0);
 
 		std::string inputMessage() const noexcept;
+
 		void setCursorOnInput() const noexcept;
+		void setColor(Chat::Console::EColor _color) noexcept;
+		void setBorder(char _border_symbol) noexcept;
 
 	private:
 
-		ConsoleCoords m_console_coords = ConsoleCoords();
+		void clearInputArea() const noexcept;
 
-		uint16_t m_console_width = 0;
-		uint16_t m_console_height = 0;
+
+
+		uint16_t m_console_width = Console::getConsoleSize().getX();
+		uint16_t m_console_height = Console::getConsoleSize().getY() - 1;
+
+		ConsoleCoords m_console_coords = ConsoleCoords();
 
 		uint16_t m_input_area_position_x = 0;
 		uint16_t m_input_area_position_y = 0;
 
-		ConsoleColor::EColor m_color = ConsoleColor::EColor::LightWhite;
+		Console::EColor m_color = Console::EColor::SkyBlue;
+		char m_border_symbol = '#';
+
 		uint16_t m_area_height = 0;
 
 	};

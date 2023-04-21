@@ -2,6 +2,8 @@
 
 #include "ConsoleOutputFunctions.h"
 
+#include <chrono>
+
 
 
 namespace Chat
@@ -26,14 +28,23 @@ namespace Chat
 
 
 	void Message::printMessage(const std::string& _sender, const std::string& _message,
-							   ConsoleColor::EColor _sender_color, ConsoleColor::EColor _message_color) noexcept
+							   Chat::Console::EColor _sender_color, Chat::Console::EColor _message_color) noexcept
 	{
-		moveConsoleCursor(m_coords_messages);
-		ConsoleColor::setConsoleColor(_sender_color);
-		std::cout << " => " << _sender << ":\n";
-		ConsoleColor::setConsoleColor(_message_color);
-		std::cout << '\t' << _message;
+		auto now = std::chrono::system_clock::now();
+		std::time_t time = std::chrono::system_clock::to_time_t(now);
 
-		m_coords_messages.setY(m_coords_messages.getY() + 3);
+		captureFunction([&]()	// thread safety output
+			{
+				ConsoleCoords _current_coords = Console::getConsoleCursorPosition();
+
+				Console::moveConsoleCursor(m_coords_messages);
+				Chat::Console::setConsoleColor(_sender_color);
+				std::cout << " => " << _sender << ":\t\t\t\t\t\t" << std::ctime(&time);
+				Chat::Console::setConsoleColor(_message_color);
+				std::cout << '\t' << _message;
+				Console::moveConsoleCursor(_current_coords);
+				m_coords_messages.setY(m_coords_messages.getY() + 3 + static_cast<uint16_t>((_message.length() + 4) / Console::getConsoleSize().getX()));
+			});
+
 	}
 }

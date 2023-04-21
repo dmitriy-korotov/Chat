@@ -1,0 +1,10 @@
+^C:\USERS\USER\MYPROJECTS\CHAT\BUILD\CMAKEFILES\EE7BB0878811016AB0658A1E12816600\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/User/MyProjects/Chat -BC:/Users/User/MyProjects/Chat/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/User/MyProjects/Chat/build/Chat.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

@@ -1,2 +1,2 @@
-# WebServer
-Firs web server on c++
+# ConsoleChat
+Simple chat in console on C++

@@ -4,7 +4,13 @@
 
 namespace Chat
 {
-	ConsoleCoords::ConsoleCoords(uint16_t _x, uint16_t _y)
+	ConsoleCoords::ConsoleCoords(COORD _coords) noexcept
+			: m_console_coords(_coords)
+	{ }
+
+
+
+	ConsoleCoords::ConsoleCoords(uint16_t _x, uint16_t _y) noexcept
 			: m_console_coords { static_cast<SHORT>(_x), static_cast<SHORT>(_y) }
 	{ }
 

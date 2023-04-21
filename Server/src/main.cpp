@@ -1,12 +1,20 @@
 #include "Socket.h"
-#include "ConsoleColor.h"
+
+#include "Console.h"
 #include "ConsoleLogFunctions.h"
 
+#include "KeyBoard.h"
+
+#include "MessagePacket.h"
+
 #include <conio.h>
+#include <vector>
 #include <thread>
+#include <mutex>
+#include <atomic>
 
 
-static const Web::EAddressFamily _ADDRESS_FAMILY_ = Web::EAddressFamily::AF_Inet;
+static const Chat::EAddressFamily _ADDRESS_FAMILY_ = Chat::EAddressFamily::AF_Inet;
 static const std::string _IP_ADDRESS_ = "127.0.0.1";
 static const uint16_t _PORT_ = 2000u;
 
@@ -18,7 +26,7 @@ int main(int argc, char** argv)
 
 
 	// initializing sockets
-	if (!Web::Socket::initSockets())
+	if (!Chat::Socket::initSockets())
 	{
 		consoleLogError("Can't initialiezed sockets.");
 		char get = _getch();
@@ -31,7 +39,7 @@ int main(int argc, char** argv)
 	
 
 	// creating socket
-	Web::Socket socket(Web::EAddressFamily::AF_Inet, Web::ESocketType::SocketStream);
+	Chat::Socket socket(Chat::EAddressFamily::AF_Inet, Chat::ESocketType::SocketStream);
 	if (!socket.isValid())
 	{
 		consoleLogError("Can't creating socket:");
@@ -75,90 +83,78 @@ int main(int argc, char** argv)
 
 
 	// buffer messages
-	std::string message;
+	std::vector<std::string> all_messages;
 
-	Web::Socket client_socket1;
-	Web::Socket client_socket2;
+	bool is_finish_server = false;
 
-	std::thread thread1([&]()
+	std::vector<std::pair<Chat::Socket, std::thread>> clients;
+	std::mutex clients_mutex;
+
+	std::thread client_accepting_handler([&]()
 		{
-			// accepting other socket
-			try
+			while (!is_finish_server)
 			{
-				client_socket1 = socket.acceptOtherSocket();
-				consoleLogSuccess("Successfully connected client1:");
-				consoleLogSocketAddress(_IP_ADDRESS_, client_socket1.getPort());
-			}
-			catch (...)
-			{
-				consoleLogError("Can't accept other socket.");
-				char get = _getch();
-			}
-
-
-			// server loop
-			while (true)
-			{
-				// reciving message
-				std::string message = client_socket1.reciveData();
-				if (message == "")
+				Chat::Socket client_socket;
+				try
 				{
-					break;
+					client_socket = socket.acceptOtherSocket();
+					consoleLogSuccess("Successfully connected new client:");
+					consoleLogSocketAddress(_IP_ADDRESS_, client_socket.getPort());
+
+					std::thread messages_handler([&](size_t _index)
+						{
+							while (clients.size() == _index)
+							{ }
+
+							while (!is_finish_server)
+							{
+								// reciving message
+								std::string packet = clients[_index].first.reciveData();
+								if (packet == "")
+								{
+									break;
+								}
+
+								consoleLogSuccess("Message successfuly recived from port:\t" + std::to_string(clients[_index].first.getPort()));
+								std::lock_guard<std::mutex> client_guard(clients_mutex);
+								for (const auto& client : clients)
+								{
+									if (client.first.isValid())
+									{
+										if (!client.first.sendData(packet.c_str(), packet.size()))
+										{
+											consoleLogError("Can't send message to port:\t" + std::to_string(client.first.getPort()));
+										}
+									}
+								}
+							}
+						}, clients.size());
+					messages_handler.detach();
+
+					clients.emplace_back(std::move(client_socket), std::move(messages_handler));
 				}
-
-				if (client_socket2.isValid())
+				catch (...)
 				{
-					// sending message
-					if (!client_socket2.sendData(message))
-					{
-						consoleLogError("Can't send message.");
-					}
+					consoleLogError("Can't accept other socket.");
+					char get = _getch();
 				}
 			}
 		});
 
-	std::thread thread2([&]()
+	std::thread close_server_handler([&]()
 		{
-			// accepting other socket
-			try
+			while (!is_finish_server)
 			{
-				client_socket2 = socket.acceptOtherSocket();
-				consoleLogSuccess("Successfully connected client2:");
-				consoleLogSocketAddress(_IP_ADDRESS_, client_socket2.getPort());
-			}
-			catch (...)
-			{
-				consoleLogError("Can't accept other socket.");
-				char get = _getch();
-			}
-
-			// server loop
-			while (true)
-			{
-				// reciving message
-				std::string message = client_socket2.reciveData();
-				if (message == "")
-				{
-					break;
-				}
-
-
-				if (client_socket1.isValid())
-				{
-					// sending message
-					if (!client_socket1.sendData(message))
-					{
-						consoleLogError("Can't send message.");
-					}
-				}
+				is_finish_server = (_getch() == Chat::KeyBoard::Escape);
 			}
 		});
 
-	thread2.join();
-	thread1.join();
+	close_server_handler.join();
+	client_accepting_handler.detach();
+
 
 	// closing all sockets
-	Web::Socket::closeAllSockets();
+	Chat::Socket::closeAllSockets();
 
 	std::cout << " => Server finishes work...\n\n";				char get = _getch();
 

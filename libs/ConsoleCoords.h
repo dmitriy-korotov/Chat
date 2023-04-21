@@ -13,7 +13,8 @@ namespace Chat
 	{
 	public:
 
-		ConsoleCoords(uint16_t _x = 0, uint16_t _y = 0);
+		explicit ConsoleCoords(COORD _coords) noexcept;
+		ConsoleCoords(uint16_t _x = 0, uint16_t _y = 0) noexcept;
 
 		operator COORD() const noexcept;
 		ConsoleCoords operator+(const ConsoleCoords& _right) const noexcept;

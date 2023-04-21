@@ -17,7 +17,7 @@ static constexpr uint8_t SOCKET_VERSION_2 = 2;
 
 
 
-namespace Web
+namespace Chat
 {
 	enum class EAddressFamily : uint8_t
 	{
@@ -75,7 +75,8 @@ namespace Web
 		bool listenOtherSockets(unsigned int _max_listened_sockets = SOMAXCONN) const noexcept;
 		Socket acceptOtherSocket() const;
 		std::string reciveData(size_t _buffer_size = 1024) const noexcept;
-		bool sendData(const std::string& _message) const noexcept;
+		bool sendData(const char* _data, uint64_t _size) const noexcept;
+		bool sendMessage(const std::string& _sender, const std::string& _message) const noexcept;
 		void close() noexcept;
 
 		static bool initSockets() noexcept;

@@ -6,13 +6,10 @@
 
 namespace Chat
 {
-	InputArea::InputArea(uint16_t _console_width, uint16_t _console_height, uint16_t _area_height,
-						 uint16_t _input_area_position_x, uint16_t _input_area_position_y)
-			: m_console_width(_console_width)
-			, m_console_height(_console_height)
-			, m_input_area_position_x(_input_area_position_x)
-			, m_input_area_position_y(_console_height - _input_area_position_y - _area_height - 1)
-			, m_console_coords(_input_area_position_x, _console_height - _input_area_position_y - _area_height - 1)
+	InputArea::InputArea(uint16_t _area_height, uint16_t _input_area_position_x, uint16_t _input_area_position_y)
+			: m_input_area_position_x(_input_area_position_x)
+			, m_input_area_position_y(m_console_height - _input_area_position_y - _area_height - 1)
+			, m_console_coords(_input_area_position_x, m_console_height - _input_area_position_y)
 			, m_area_height(_area_height)
 	{ }
 
@@ -20,19 +17,23 @@ namespace Chat
 
 	std::string InputArea::inputMessage() const noexcept
 	{
-		char buffer[120] = {};
+		char buffer[120 * 3] = {};
 
-		moveConsoleCursor(m_console_coords);
-		ConsoleColor::setConsoleColor(m_color);
-		printHorizontalLine('-', m_console_width);
-		moveConsoleCursor(m_console_coords + ConsoleCoords(0, m_area_height));
-		printHorizontalLine('-', m_console_width);
-		moveConsoleCursor(m_console_coords + ConsoleCoords(0, 2));
+		captureFunction([&]()	// thread safety output
+			{
+				Console::moveConsoleCursor(m_console_coords);
+				Console::setConsoleColor(m_color);
+				printHorizontalLine(m_border_symbol, m_console_width, false);
+				Console::moveConsoleCursor(m_console_coords - ConsoleCoords(0, m_area_height + 1));
+				printHorizontalLine(m_border_symbol, m_console_width, false);
+				Console::moveConsoleCursor(m_console_coords + ConsoleCoords(0, m_area_height / 2));
+			});
 
+		Console::setConsoleColor(Console::EColor::White);
 		std::fgets(buffer, m_console_width, stdin);
-		
-		moveConsoleCursor(m_console_coords + ConsoleCoords(0, 2));
-		std::cout << "\t\t\t\t\t\t\t\t\t\t\t\t\t\t";
+		Console::setConsoleColor(m_color);
+
+		clearInputArea();
 
 		return buffer;
 	}
@@ -41,6 +42,34 @@ namespace Chat
 
 	void InputArea::setCursorOnInput() const noexcept
 	{
-		moveConsoleCursor(m_console_coords + ConsoleCoords(0, 2));
+		Console::moveConsoleCursor(m_console_coords + ConsoleCoords(0, 2));
+	}
+
+
+
+	void InputArea::setColor(Chat::Console::EColor _color) noexcept
+	{
+		m_color = _color;
+	}
+
+
+
+	void InputArea::setBorder(char _border_symbol) noexcept
+	{
+		m_border_symbol = _border_symbol;
+	}
+
+
+
+	void InputArea::clearInputArea() const noexcept
+	{	
+		captureFunction([&]()
+			{
+				Console::moveConsoleCursor(m_console_coords - ConsoleCoords(0, m_area_height));
+				for (size_t i = 0; i < m_area_height; ++i)
+				{
+					printHorizontalLine(' ', m_console_width);
+				}
+			});
 	}
 }

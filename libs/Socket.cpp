@@ -4,7 +4,7 @@
 
 
 
-namespace Web
+namespace Chat
 {
 	WSADATA Socket::m_ws_data;
 
@@ -231,9 +231,17 @@ namespace Web
 
 
 
-	bool Socket::sendData(const std::string& _message) const noexcept
+	bool Socket::sendData(const char* _message, uint64_t _size) const noexcept
 	{
-		return send(m_socket, _message.c_str(), _message.length(), 0) != SOCKET_ERROR;
+		return send(m_socket, _message, _size, 0) != SOCKET_ERROR;
+	}
+
+
+
+	bool Socket::sendMessage(const std::string& _sender, const std::string& _message) const noexcept
+	{
+		std::string packet = _sender + '|' + _message;
+		return send(m_socket, packet.c_str(), packet.size(), 0) != SOCKET_ERROR;
 	}
 
 

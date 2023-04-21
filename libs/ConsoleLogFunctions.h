@@ -2,9 +2,9 @@
 #ifndef CONSOLE_LOG_FUNCTION
 #define CONSOLE_LOG_FUNCTION
 
-#include <iostream>
+#include "Console.h"
 
-#include "ConsoleColor.h"
+#include <iostream>
 
 
 

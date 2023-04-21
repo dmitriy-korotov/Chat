@@ -15,11 +15,4 @@ namespace Chat
 			std::cout << std::endl;
 		}
 	}
-
-
-
-	void moveConsoleCursor(const ConsoleCoords& _coords, int _handle) noexcept
-	{
-		SetConsoleCursorPosition(GetStdHandle(_handle), static_cast<COORD>(_coords));
-	}
 }
