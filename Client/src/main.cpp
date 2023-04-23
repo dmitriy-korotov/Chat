@@ -4,15 +4,15 @@
 #include "ConsoleLogFunctions.h"
 #include "ConsoleOutputFunctions.h"
 
-#include "Interface/Message.h"
-#include "Interface/InputArea.h"
+#include "ClientApp/Interface/Message.h"
+#include "ClientApp/Interface/InputArea.h"
 
 #include "MessagePacket.h"
 
 #include <conio.h>
 #include <thread>
 
-#include "Interface/InterfaceSync.h"
+
 
 // server data
 static const Chat::EAddressFamily _SERVER_ADDRESS_FAMILY_ = Chat::EAddressFamily::AF_Inet;
@@ -71,10 +71,10 @@ int main(int argc, char** argv)
 	Chat::InputArea input_area(3);
 
 
-
-	Chat::Console::moveConsoleCursor(Chat::ConsoleCoords(_CONSOLE_WIDTH_ / 2, _CONSOLE_HEIGHT_ / 2));
+	std::string label_for_input_username = "INPUT YOUR NAME:";
+	Chat::Console::moveConsoleCursor(Chat::ConsoleCoords(_CONSOLE_WIDTH_ / 2 - label_for_input_username.length() / 2, _CONSOLE_HEIGHT_ / 2));
 	Chat::Console::setConsoleColor(Chat::Console::EColor::Purpule);
-	std::cout << "INPUT YOUR NAME:\t";				
+	std::cout << "INPUT YOUR NAME: ";				
 	Chat::Console::setConsoleColor(Chat::Console::EColor::White);
 	std::cin >> client_username;
 	Chat::Console::clearStdInBuffer();
@@ -87,11 +87,6 @@ int main(int argc, char** argv)
 			// client loop
 			while (true)
 			{
-				// inputing message
-				/*Chat::InterfaceSync::captureFunction([&]()
-					{
-						buffer_to_input_messages = input_area.inputMessage();
-					});*/
 				buffer_to_input_messages = input_area.inputMessage();
 
 				if (buffer_to_input_messages == "end\n" || buffer_to_input_messages == "END\n")
@@ -124,10 +119,6 @@ int main(int argc, char** argv)
 				{
 					if (msg_packet.getSender() == client_username)
 					{
-						/*Chat::InterfaceSync::captureFunction([&]()
-							{
-								Chat::Message::printMessage("You", msg_packet.getMessage());
-							});*/
 						Chat::Message::printMessage("You", msg_packet.getMessage());
 					}
 					else

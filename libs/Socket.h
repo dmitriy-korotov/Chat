@@ -57,10 +57,10 @@ namespace Chat
 
 
 		Socket() = default;
-		Socket(EAddressFamily _address_family, ESocketType _socket_type, EProtocolType _protocol_type = EProtocolType::Default);
+		Socket(EAddressFamily _address_family, ESocketType _socket_type, EProtocolType _protocol_type = EProtocolType::Default) noexcept;
 		Socket(Socket&& _other_socket) noexcept;
 		Socket& operator=(Socket&& _other_socket) noexcept;
-		~Socket();
+		~Socket() noexcept;
 
 
 
@@ -69,6 +69,7 @@ namespace Chat
 
 		void swap(Socket& _other_socket);
 
+		void init(EAddressFamily _address_family, ESocketType _socket_type, EProtocolType _protocol_type = EProtocolType::Default) noexcept;
 		bool isValid() const noexcept;
 		bool bindSocket(EAddressFamily _address_family, const std::string& _ip_address, Port _port);
 		bool connectToOtherSocket(const std::string& _ip_address, Port _port) const noexcept;

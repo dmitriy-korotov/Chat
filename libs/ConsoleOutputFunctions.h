@@ -9,4 +9,5 @@
 namespace Chat
 {
 	void printHorizontalLine(char _symbol_fill, uint16_t _width, bool _move_to_next_line = true) noexcept;
+	void printCenteringMessage(const std::string& _message) noexcept;
 }

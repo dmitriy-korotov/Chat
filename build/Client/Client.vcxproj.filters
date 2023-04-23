@@ -4,13 +4,16 @@
     <ClCompile Include="C:\Users\User\MyProjects\Chat\Client\src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\User\MyProjects\Chat\Client\src\Interface\InterfaceSync.cpp">
+    <ClCompile Include="C:\Users\User\MyProjects\Chat\Client\src\ClientApp\Client\Client.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\User\MyProjects\Chat\Client\src\Interface\Message.cpp">
+    <ClCompile Include="C:\Users\User\MyProjects\Chat\Client\src\ClientApp\Interface\InterfaceSync.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\User\MyProjects\Chat\Client\src\Interface\InputArea.cpp">
+    <ClCompile Include="C:\Users\User\MyProjects\Chat\Client\src\ClientApp\Interface\Message.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\User\MyProjects\Chat\Client\src\ClientApp\Interface\InputArea.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="C:\Users\User\MyProjects\Chat\libs\Socket.cpp">
@@ -36,13 +39,16 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="C:\Users\User\MyProjects\Chat\Client\src\Interface\InterfaceSync.h">
+    <ClInclude Include="C:\Users\User\MyProjects\Chat\Client\src\ClientApp\Client\Client.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\User\MyProjects\Chat\Client\src\Interface\Message.h">
+    <ClInclude Include="C:\Users\User\MyProjects\Chat\Client\src\ClientApp\Interface\InterfaceSync.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\User\MyProjects\Chat\Client\src\Interface\InputArea.h">
+    <ClInclude Include="C:\Users\User\MyProjects\Chat\Client\src\ClientApp\Interface\Message.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\User\MyProjects\Chat\Client\src\ClientApp\Interface\InputArea.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\User\MyProjects\Chat\libs\Socket.h">

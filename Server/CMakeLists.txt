@@ -8,6 +8,9 @@ add_executable(${PROJECT_NAME}
 
 		src/main.cpp
 
+		src/Server/Server.h
+		src/Server/Server.cpp
+
 		../libs/Socket.h
 		../libs/Socket.cpp
 		
@@ -17,6 +20,8 @@ add_executable(${PROJECT_NAME}
 		../libs/ConsoleCoords.cpp
 		../libs/ConsoleLogFunctions.h
 		../libs/ConsoleLogFunctions.cpp
+		../libs/ConsoleOutputFunctions.h
+		../libs/ConsoleOutputFunctions.cpp
 
 		../libs/KeyBoard.h
 		../libs/KeyBoard.cpp

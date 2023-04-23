@@ -98,7 +98,6 @@
       <UseFullPaths>false</UseFullPaths>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
-      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
@@ -311,12 +310,14 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="C:\Users\User\MyProjects\Chat\Client\src\main.cpp" />
-    <ClInclude Include="C:\Users\User\MyProjects\Chat\Client\src\Interface\InterfaceSync.h" />
-    <ClCompile Include="C:\Users\User\MyProjects\Chat\Client\src\Interface\InterfaceSync.cpp" />
-    <ClInclude Include="C:\Users\User\MyProjects\Chat\Client\src\Interface\Message.h" />
-    <ClCompile Include="C:\Users\User\MyProjects\Chat\Client\src\Interface\Message.cpp" />
-    <ClInclude Include="C:\Users\User\MyProjects\Chat\Client\src\Interface\InputArea.h" />
-    <ClCompile Include="C:\Users\User\MyProjects\Chat\Client\src\Interface\InputArea.cpp" />
+    <ClInclude Include="C:\Users\User\MyProjects\Chat\Client\src\ClientApp\Client\Client.h" />
+    <ClCompile Include="C:\Users\User\MyProjects\Chat\Client\src\ClientApp\Client\Client.cpp" />
+    <ClInclude Include="C:\Users\User\MyProjects\Chat\Client\src\ClientApp\Interface\InterfaceSync.h" />
+    <ClCompile Include="C:\Users\User\MyProjects\Chat\Client\src\ClientApp\Interface\InterfaceSync.cpp" />
+    <ClInclude Include="C:\Users\User\MyProjects\Chat\Client\src\ClientApp\Interface\Message.h" />
+    <ClCompile Include="C:\Users\User\MyProjects\Chat\Client\src\ClientApp\Interface\Message.cpp" />
+    <ClInclude Include="C:\Users\User\MyProjects\Chat\Client\src\ClientApp\Interface\InputArea.h" />
+    <ClCompile Include="C:\Users\User\MyProjects\Chat\Client\src\ClientApp\Interface\InputArea.cpp" />
     <ClInclude Include="C:\Users\User\MyProjects\Chat\libs\Socket.h" />
     <ClCompile Include="C:\Users\User\MyProjects\Chat\libs\Socket.cpp" />
     <ClInclude Include="C:\Users\User\MyProjects\Chat\libs\MessagePacket.h" />

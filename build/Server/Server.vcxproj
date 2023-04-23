@@ -310,6 +310,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="C:\Users\User\MyProjects\Chat\Server\src\main.cpp" />
+    <ClInclude Include="C:\Users\User\MyProjects\Chat\Server\src\Server\Server.h" />
+    <ClCompile Include="C:\Users\User\MyProjects\Chat\Server\src\Server\Server.cpp" />
     <ClInclude Include="C:\Users\User\MyProjects\Chat\libs\Socket.h" />
     <ClCompile Include="C:\Users\User\MyProjects\Chat\libs\Socket.cpp" />
     <ClInclude Include="C:\Users\User\MyProjects\Chat\libs\Console.h" />
@@ -318,6 +320,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="C:\Users\User\MyProjects\Chat\libs\ConsoleCoords.cpp" />
     <ClInclude Include="C:\Users\User\MyProjects\Chat\libs\ConsoleLogFunctions.h" />
     <ClCompile Include="C:\Users\User\MyProjects\Chat\libs\ConsoleLogFunctions.cpp" />
+    <ClInclude Include="C:\Users\User\MyProjects\Chat\libs\ConsoleOutputFunctions.h" />
+    <ClCompile Include="C:\Users\User\MyProjects\Chat\libs\ConsoleOutputFunctions.cpp" />
     <ClInclude Include="C:\Users\User\MyProjects\Chat\libs\KeyBoard.h" />
     <ClCompile Include="C:\Users\User\MyProjects\Chat\libs\KeyBoard.cpp" />
   </ItemGroup>

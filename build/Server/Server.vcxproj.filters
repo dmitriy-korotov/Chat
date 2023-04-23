@@ -4,6 +4,9 @@
     <ClCompile Include="C:\Users\User\MyProjects\Chat\Server\src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="C:\Users\User\MyProjects\Chat\Server\src\Server\Server.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="C:\Users\User\MyProjects\Chat\libs\Socket.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -16,11 +19,17 @@
     <ClCompile Include="C:\Users\User\MyProjects\Chat\libs\ConsoleLogFunctions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="C:\Users\User\MyProjects\Chat\libs\ConsoleOutputFunctions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="C:\Users\User\MyProjects\Chat\libs\KeyBoard.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="C:\Users\User\MyProjects\Chat\Server\src\Server\Server.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="C:\Users\User\MyProjects\Chat\libs\Socket.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -31,6 +40,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\User\MyProjects\Chat\libs\ConsoleLogFunctions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\User\MyProjects\Chat\libs\ConsoleOutputFunctions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\User\MyProjects\Chat\libs\KeyBoard.h">

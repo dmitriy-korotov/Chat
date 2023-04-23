@@ -23,15 +23,16 @@ namespace Chat
 			SkyBlue,
 			Red,
 			Purpule,
-			Yellow,
-			White,
+			Brown,
+			LightGrey,
 			Grey,
 			LightBlue,
 			LightGreen,
 			LightSkyBlue,
 			LightRed,
-			LightYellow,
-			LightWhite
+			LightPurple,
+			Yellow,
+			White
 		};
 
 		Console() = delete;

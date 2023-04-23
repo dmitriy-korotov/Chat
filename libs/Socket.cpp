@@ -10,7 +10,7 @@ namespace Chat
 
 
 
-	Socket::Socket(EAddressFamily _address_family, ESocketType _socket_type, EProtocolType _protocol_type)
+	Socket::Socket(EAddressFamily _address_family, ESocketType _socket_type, EProtocolType _protocol_type) noexcept
 		: m_address_family(_address_family)
 	{
 		m_socket = socket(static_cast<int>(_address_family), static_cast<int>(_socket_type), static_cast<int>(_protocol_type));
@@ -50,9 +50,16 @@ namespace Chat
 
 
 
-	Socket::~Socket()
+	Socket::~Socket() noexcept
 	{
 		close();
+	}
+
+
+
+	void Socket::init(EAddressFamily _address_family, ESocketType _socket_type, EProtocolType _protocol_type) noexcept
+	{
+		m_socket = socket(static_cast<int>(_address_family), static_cast<int>(_socket_type), static_cast<int>(_protocol_type));
 	}
 
 
