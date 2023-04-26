@@ -6,12 +6,21 @@
 
 namespace Chat
 {
-	InputArea::InputArea(uint16_t _area_height, uint16_t _input_area_position_x, uint16_t _input_area_position_y)
-			: m_input_area_position_x(_input_area_position_x)
-			, m_input_area_position_y(m_console_height - _input_area_position_y - _area_height - 1)
-			, m_console_coords(_input_area_position_x, m_console_height - _input_area_position_y)
+	InputArea::InputArea(uint16_t _area_height, uint16_t _input_area_position_x, uint16_t _input_area_position_y) noexcept
+			: m_console_coords(_input_area_position_x, m_console_height - _input_area_position_y)
 			, m_area_height(_area_height)
 	{ }
+
+
+
+	void InputArea::create(uint16_t _area_height, uint16_t _input_area_position_x, uint16_t _input_area_position_y) noexcept
+	{
+		m_console_width = Console::getConsoleSize().getX();
+		m_console_height = Console::getConsoleSize().getY();
+
+		m_console_coords.setCoords(_input_area_position_x, m_console_height - _input_area_position_y - 1);
+		m_area_height = _area_height;
+	}
 
 
 
@@ -30,7 +39,7 @@ namespace Chat
 			});
 
 		Console::setConsoleColor(Console::EColor::White);
-		std::fgets(buffer, m_console_width, stdin);
+		std::fgets(buffer, m_console_width * m_console_height, stdin);
 		Console::setConsoleColor(m_color);
 
 		clearInputArea();
@@ -42,7 +51,7 @@ namespace Chat
 
 	void InputArea::setCursorOnInput() const noexcept
 	{
-		Console::moveConsoleCursor(m_console_coords + ConsoleCoords(0, 2));
+		Console::moveConsoleCursor(m_console_coords + ConsoleCoords(0, m_area_height / 2));
 	}
 
 

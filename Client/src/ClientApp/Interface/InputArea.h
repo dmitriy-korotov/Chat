@@ -18,9 +18,12 @@ namespace Chat
 	{
 	public:
 
-		explicit InputArea(uint16_t _area_height, uint16_t _input_area_position_x = 0, uint16_t _input_area_position_y = 0);
+		InputArea() = default;
+		explicit InputArea(uint16_t _area_height, uint16_t _input_area_position_x = 0, uint16_t _input_area_position_y = 0) noexcept;
 
 		std::string inputMessage() const noexcept;
+
+		void create(uint16_t _area_height, uint16_t _input_area_position_x = 0, uint16_t _input_area_position_y = 0) noexcept;
 
 		void setCursorOnInput() const noexcept;
 		void setColor(Chat::Console::EColor _color) noexcept;
@@ -36,9 +39,6 @@ namespace Chat
 		uint16_t m_console_height = Console::getConsoleSize().getY() - 1;
 
 		ConsoleCoords m_console_coords = ConsoleCoords();
-
-		uint16_t m_input_area_position_x = 0;
-		uint16_t m_input_area_position_y = 0;
 
 		Console::EColor m_color = Console::EColor::SkyBlue;
 		char m_border_symbol = '#';

@@ -238,4 +238,18 @@ namespace Chat
 	{
 		m_is_finish_server = true;
 	}
+
+
+
+	const std::string& Server::getIPAddress() noexcept
+	{
+		return _IP_ADDRESS_;
+	}
+
+
+
+	uint16_t Server::getPort() noexcept
+	{
+		return _PORT_;
+	}
 }

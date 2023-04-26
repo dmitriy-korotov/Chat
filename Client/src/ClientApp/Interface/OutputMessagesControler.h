@@ -11,12 +11,12 @@
 
 namespace Chat
 {
-	class Message : protected InterfaceSync
+	class OutputMessagesControler : protected InterfaceSync
 	{
 	public:
 
-		Message() = delete;
-		~Message() = delete;
+		OutputMessagesControler() = delete;
+		~OutputMessagesControler() = delete;
 
 		static void setStartPositionMessages(const ConsoleCoords& _console_coords) noexcept;
 		static void setStrideBetweenMessages(uint16_t _stride) noexcept;

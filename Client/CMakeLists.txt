@@ -13,8 +13,8 @@ add_executable(${PROJECT_NAME}
 
 		src/ClientApp/Interface/InterfaceSync.h
 		src/ClientApp/Interface/InterfaceSync.cpp
-		src/ClientApp/Interface/Message.h
-		src/ClientApp/Interface/Message.cpp
+		src/ClientApp/Interface/OutputMessagesControler.h
+		src/ClientApp/Interface/OutputMessagesControler.cpp
 		src/ClientApp/Interface/InputArea.h
 		src/ClientApp/Interface/InputArea.cpp
 

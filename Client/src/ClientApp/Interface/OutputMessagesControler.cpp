@@ -1,4 +1,4 @@
-#include "Message.h"
+#include "OutputMessagesControler.h"
 
 #include "ConsoleOutputFunctions.h"
 
@@ -8,27 +8,27 @@
 
 namespace Chat
 {
-	ConsoleCoords Message::m_coords_messages = ConsoleCoords();
-	uint16_t Message::m_stride_between_messages = 1;
+	ConsoleCoords OutputMessagesControler::m_coords_messages = ConsoleCoords();
+	uint16_t OutputMessagesControler::m_stride_between_messages = 1;
 
 
 
-	void Message::setStartPositionMessages(const ConsoleCoords& _console_coords) noexcept
+	void OutputMessagesControler::setStartPositionMessages(const ConsoleCoords& _console_coords) noexcept
 	{
 		m_coords_messages = _console_coords;
 	}
 
 
 
-	void Message::setStrideBetweenMessages(uint16_t _stride) noexcept
+	void OutputMessagesControler::setStrideBetweenMessages(uint16_t _stride) noexcept
 	{
 		m_stride_between_messages = _stride;
 	}
 
 
 
-	void Message::printMessage(const std::string& _sender, const std::string& _message,
-							   Chat::Console::EColor _sender_color, Chat::Console::EColor _message_color) noexcept
+	void OutputMessagesControler::printMessage(const std::string& _sender, const std::string& _message,
+											   Chat::Console::EColor _sender_color, Chat::Console::EColor _message_color) noexcept
 	{
 		auto now = std::chrono::system_clock::now();
 		std::time_t time = std::chrono::system_clock::to_time_t(now);
