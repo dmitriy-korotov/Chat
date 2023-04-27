@@ -115,6 +115,21 @@ namespace Chat
 
 	void ClientChat::reciveMessagesHandler() noexcept
 	{
+		m_socket.sendData(m_client_username.c_str(), m_client_username.size());
+
+		std::string packet = m_socket.reciveData();
+		size_t start = 0;
+		for (size_t i = 0; i < packet.size(); ++i)
+		{
+			if (packet[i] == '\n')
+			{
+				Chat::MessagePacket msg(packet.substr(start, i - start));
+				start = i + 1;
+
+				Chat::OutputMessagesControler::printMessage(msg.getSender(), msg.getMessage());
+			}
+		}
+
 		while (!is_finish)
 		{
 			Chat::MessagePacket msg_packet(m_socket.reciveData());
@@ -159,13 +174,16 @@ namespace Chat
 		{
 			return false;
 		}
+
+		inputUsername();
+
+		m_input_area.create(INPUT_AREA_HEIGHT);
+
 		if (!connectToServer())
 		{
 			return false;
 		}
-		//inputUsername();
 
-		m_input_area.create(INPUT_AREA_HEIGHT);
 
 		std::thread input_message_handler(inputMessagesHandler);
 

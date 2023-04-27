@@ -34,7 +34,7 @@ namespace Chat
 				Console::setConsoleColor(m_color);
 				printHorizontalLine(m_border_symbol, m_console_width, false);
 				Console::moveConsoleCursor(m_console_coords - ConsoleCoords(0, m_area_height + 1));
-				printHorizontalLine(m_border_symbol, m_console_width, false);
+				printHorizontalLine(m_border_symbol, m_console_width);
 				Console::moveConsoleCursor(m_console_coords + ConsoleCoords(0, m_area_height / 2));
 			});
 

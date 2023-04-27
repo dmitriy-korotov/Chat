@@ -13,6 +13,10 @@ add_executable(${PROJECT_NAME}
 
 		../libs/Socket.h
 		../libs/Socket.cpp
+		../libs/User.h
+		../libs/User.cpp
+		../libs/MessagePacket.h
+		../libs/MessagePacket.cpp
 		
 		../libs/Console.h
 		../libs/Console.cpp

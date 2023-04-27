@@ -4,6 +4,9 @@
 
 #include "Socket.h"
 
+#include "User.h"
+#include "MessagePacket.h"
+
 #include <vector>
 #include <mutex>
 #include <string>
@@ -36,6 +39,8 @@ namespace Chat
 		static void closeServerHandler() noexcept;
 		static void logSuccessfulyRecivedMessage(uint16_t _port) noexcept;
 
+		static void sendAllMessagesToUser(const User& _user) noexcept;
+
 
 
 		static Chat::Socket m_socket;
@@ -46,10 +51,10 @@ namespace Chat
 
 
 
-		static std::vector<std::string> m_all_messages;	
+		static std::vector<Chat::MessagePacket> m_all_messages;	
 		static std::mutex m_message_mutex;
 		static bool m_is_finish_server;
-		static std::vector<std::pair<Chat::Socket, std::thread>> m_clients;	
+		static std::vector<std::pair<Chat::User, std::thread>> m_clients;	
 		static std::mutex m_clients_mutex;
 
 	};

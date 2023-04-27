@@ -18,7 +18,5 @@ int main(int argc, char** argv)
 		return 1;
 	}
 
-	char end = _getch();
-
 	return 0;
 }

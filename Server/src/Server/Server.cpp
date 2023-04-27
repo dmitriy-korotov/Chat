@@ -20,10 +20,10 @@ namespace Chat
 
 
 
-	std::vector<std::string> Server::m_all_messages;
+	std::vector<Chat::MessagePacket> Server::m_all_messages;
 	std::mutex Server::m_message_mutex;
 	bool Server::m_is_finish_server = false;
-	std::vector<std::pair<Chat::Socket, std::thread>> Server::m_clients;
+	std::vector<std::pair<Chat::User, std::thread>> Server::m_clients;
 	std::mutex Server::m_clients_mutex;
 
 
@@ -118,25 +118,29 @@ namespace Chat
 
 		while (!m_is_finish_server)
 		{
-			std::string packet = m_clients[_index].first.reciveData();
-			if (packet == "")
+			std::string packet = m_clients[_index].first.reciveMessage();
+
+			Chat::MessagePacket message(std::move(packet));
+
+			if (message.getMessage() == "" || message.getMessage() == "/SERVER: unplug")
 			{
+				m_clients[_index].first.unplug();
 				break;
 			}
 			m_message_mutex.lock();
-			m_all_messages.push_back(packet);
+			m_all_messages.emplace_back(message);
 			m_message_mutex.unlock();
 
-			logSuccessfulyRecivedMessage(m_clients[_index].first.getPort());
+			logSuccessfulyRecivedMessage(m_clients[_index].first.getPortInfo());
 			
 			std::lock_guard<std::mutex> client_guard(m_clients_mutex);
 			for (const auto& client : m_clients)
 			{
-				if (client.first.isValid())
+				if (client.first.isConnected())
 				{
-					if (!client.first.sendData(packet.c_str(), packet.size()))
+					if (!client.first.reciveMessage(message.getSender(), message.getMessage()))
 					{
-						consoleLogError("Can't send message to port:\t" + std::to_string(client.first.getPort()));
+						consoleLogError("Can't send message to port:\t" + std::to_string(client.first.getPortInfo()));
 					}
 				}
 			}
@@ -156,17 +160,19 @@ namespace Chat
 				consoleLogSuccess("Successfully connected new client:");
 				consoleLogSocketAddress(_IP_ADDRESS_, client_socket.getPort());
 
-				m_message_mutex.lock();
-				for (const std::string& packet : m_all_messages)
+				std::string client_username = client_socket.reciveData();
+
+				if (!client_username.empty())
 				{
-					m_socket.sendData(packet.c_str(), packet.size());
+					User new_user(client_username, std::move(client_socket));
+
+					sendAllMessagesToUser(new_user);
+
+					std::thread messages_handler(clientsMessagesHandler, m_clients.size());
+					messages_handler.detach();
+
+					m_clients.emplace_back(std::move(new_user), std::move(messages_handler));
 				}
-				m_message_mutex.unlock();
-
-				std::thread messages_handler(clientsMessagesHandler, m_clients.size());
-				messages_handler.detach();
-
-				m_clients.emplace_back(std::move(client_socket), std::move(messages_handler));
 			}
 			catch (...)
 			{
@@ -187,6 +193,18 @@ namespace Chat
 		{
 			m_is_finish_server = (_getch() == Chat::KeyBoard::Escape);
 		}
+	}
+
+
+
+	void Server::sendAllMessagesToUser(const User& _user) noexcept
+	{
+		m_message_mutex.lock();
+		for (const Chat::MessagePacket& packet : m_all_messages)
+		{
+			_user.reciveMessage(packet.getSender(), packet.getMessage());
+		}
+		m_message_mutex.unlock();
 	}
 
 
@@ -214,10 +232,12 @@ namespace Chat
 		}
 
 
-		// Threads
+
 		std::thread client_accepting_handler(acceptClientsHandler);
 		
 		std::thread close_server_handler(closeServerHandler);
+
+
 
 		close_server_handler.join();
 		client_accepting_handler.detach();

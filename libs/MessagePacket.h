@@ -12,7 +12,11 @@ namespace Chat
 	{
 	public:
 
-		MessagePacket(const std::string& _message_packet) noexcept;
+		explicit MessagePacket(const std::string& _message_packet) noexcept;
+		MessagePacket(const MessagePacket&) = default;
+		MessagePacket& operator=(const MessagePacket&) = default;
+		MessagePacket(MessagePacket&&) = default;
+		MessagePacket& operator=(MessagePacket&&) = default;
 
 		const std::string& getSender() const noexcept;
 		const std::string& getMessage() const noexcept;
