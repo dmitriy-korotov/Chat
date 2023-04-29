@@ -82,6 +82,13 @@ namespace Chat
 
 
 
+	bool User::reciveMessage(const std::string& _message) const noexcept
+	{
+		return sendData(_message);
+	}
+
+
+
 	std::string User::reciveMessage() const noexcept
 	{
 		return m_socket.reciveData();

@@ -32,6 +32,7 @@ namespace Chat
 		static void inputUsername() noexcept;
 		static void inputMessagesHandler() noexcept;
 		static void reciveMessagesHandler() noexcept;
+		static void reciveOldMessages() noexcept;
 
 
 		static uint16_t m_console_width;

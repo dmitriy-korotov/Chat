@@ -28,6 +28,7 @@ namespace Chat
 		void swap(User& _other) noexcept;
 
 		bool reciveMessage(const std::string& _username, const std::string& _message) const noexcept;
+		bool reciveMessage(const std::string& _message) const noexcept;
 		std::string reciveMessage() const noexcept;
 		void unplug() noexcept;
 		bool isConnected() const noexcept;

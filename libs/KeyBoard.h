@@ -14,7 +14,8 @@ namespace Chat
 
 		enum EKeys : uint16_t
 		{
-			Escape = 27
+			Escape = 27,
+			Slesh = 47
 		};
 
 	};

@@ -113,22 +113,31 @@ namespace Chat
 
 
 
-	void ClientChat::reciveMessagesHandler() noexcept
+	void ClientChat::reciveOldMessages() noexcept
 	{
 		m_socket.sendData(m_client_username.c_str(), m_client_username.size());
 
 		std::string packet = m_socket.reciveData();
-		size_t start = 0;
-		for (size_t i = 0; i < packet.size(); ++i)
+		if (packet != "NONE")
 		{
-			if (packet[i] == '\n')
+			for (size_t start = 0, i = 0; i < packet.size(); ++i)
 			{
-				Chat::MessagePacket msg(packet.substr(start, i - start));
-				start = i + 1;
+				if (packet[i] == '\n')
+				{
+					Chat::MessagePacket msg(packet.substr(start, i - start));
+					start = i + 1;
 
-				Chat::OutputMessagesControler::printMessage(msg.getSender(), msg.getMessage());
+					Chat::OutputMessagesControler::printMessage(msg.getSender(), msg.getMessage());
+				}
 			}
 		}
+	}
+
+
+
+	void ClientChat::reciveMessagesHandler() noexcept
+	{
+		reciveOldMessages();
 
 		while (!is_finish)
 		{

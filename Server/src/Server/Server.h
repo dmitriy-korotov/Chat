@@ -28,6 +28,8 @@ namespace Chat
 		static const std::string& getIPAddress() noexcept;
 		static uint16_t getPort() noexcept;
 
+		static void printAllUsers() noexcept;
+
 	private:
 
 		static bool socketsInitialization() noexcept;
@@ -36,7 +38,7 @@ namespace Chat
 		static bool startLinstenigOtherSockets() noexcept;
 		static void acceptClientsHandler() noexcept;
 		static void clientsMessagesHandler(size_t _index) noexcept;
-		static void closeServerHandler() noexcept;
+		static void commandServerHandler() noexcept;
 		static void logSuccessfulyRecivedMessage(uint16_t _port) noexcept;
 
 		static void sendAllMessagesToUser(const User& _user) noexcept;

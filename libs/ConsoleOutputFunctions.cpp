@@ -28,4 +28,16 @@ namespace Chat
 		
 		std::cout << _message << std::endl;
 	}
+
+
+
+	void printLine(const std::string& _text, bool _move_to_next_line, Console::EColor _text_color, Console::EColor _bgc) noexcept
+	{
+		Console::setConsoleColor(_text_color, _bgc);
+		std::cout << _text;
+		if (_move_to_next_line)
+		{
+			std::cout << std::endl;
+		}
+	}
 }

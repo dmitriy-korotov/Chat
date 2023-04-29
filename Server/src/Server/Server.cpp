@@ -187,11 +187,34 @@ namespace Chat
 
 
 
-	void Server::closeServerHandler() noexcept
+	void Server::commandServerHandler() noexcept
 	{
 		while (!m_is_finish_server)
 		{
-			m_is_finish_server = (_getch() == Chat::KeyBoard::Escape);
+			char option = _getch();
+
+			switch (option)
+			{
+			case KeyBoard::Escape:
+				m_is_finish_server = true;
+				break;
+			case KeyBoard::Slesh:
+				std::string command;
+				printLine(" => Input command:\t", false);
+				std::cin >> command;		
+				std::cout << std::endl;
+
+				if (command == "users")
+				{
+					printLine("All Users : \n");
+					printAllUsers();
+				}
+				else
+				{
+					consoleLogError("Unknowing command");
+				}
+				break;
+			}
 		}
 	}
 
@@ -199,20 +222,29 @@ namespace Chat
 
 	void Server::sendAllMessagesToUser(const User& _user) noexcept
 	{
-		m_message_mutex.lock();
-		for (const Chat::MessagePacket& packet : m_all_messages)
+		if (!m_all_messages.empty())
 		{
-			_user.reciveMessage(packet.getSender(), packet.getMessage());
+			m_message_mutex.lock();
+			std::string big_message_paket;
+			for (const Chat::MessagePacket& packet : m_all_messages)
+			{
+				big_message_paket += packet.getSender() + '|' + packet.getMessage();
+			}
+			_user.reciveMessage(big_message_paket);
+			m_message_mutex.unlock();
 		}
-		m_message_mutex.unlock();
+		else
+		{
+			std::string message = "NONE";
+			_user.reciveMessage(std::move(message));
+		}
 	}
 
 
 
 	bool Server::run() noexcept
 	{
-		Chat::Console::setConsoleColor(Chat::Console::EColor::White, Chat::Console::EColor::Purpule);
-		std::cout << " => RUNNING SERVER...\n\n";
+		printLine(" => RUNNING SERVER...\n", true, Chat::Console::EColor::White, Chat::Console::EColor::Purpule);
 
 		if (!socketsInitialization())
 		{
@@ -235,7 +267,7 @@ namespace Chat
 
 		std::thread client_accepting_handler(acceptClientsHandler);
 		
-		std::thread close_server_handler(closeServerHandler);
+		std::thread close_server_handler(commandServerHandler);
 
 
 
@@ -246,8 +278,7 @@ namespace Chat
 		Chat::Socket::closeAllSockets();
 
 
-		Chat::Console::setConsoleColor(Chat::Console::EColor::White, Chat::Console::EColor::Purpule);
-		std::cout << " => SERVER FINISHES WORK...\n\n";
+		printLine(" => SERVER FINISHES WORK...\n", true, Chat::Console::EColor::White, Chat::Console::EColor::Purpule);
 
 		return true;
 	}
@@ -271,5 +302,31 @@ namespace Chat
 	uint16_t Server::getPort() noexcept
 	{
 		return _PORT_;
+	}
+
+
+
+	void Server::printAllUsers() noexcept
+	{
+		if (!m_clients.empty())
+		{
+			for (const auto& client : m_clients)
+			{
+				if (client.first.isConnected())
+				{
+					Console::setConsoleColor(Console::EColor::LightPurple);
+					std::cout << ".............." << client.first.getUsername() << "\n\n";
+				}
+				else
+				{
+					Console::setConsoleColor(Console::EColor::Red);
+					std::cout << ".............." << client.first.getUsername() << " - unplug" << "\n\n";
+				}
+			}
+		}
+		else
+		{
+			consoleLogError("Hasn't connected users.");
+		}
 	}
 }
